@@ -14,22 +14,18 @@ import ru.mail.dimaushenko.utils.PropertyUtil;
 import ru.mail.dimaushenko.utils.impl.PropertyUtilConstantsImpl;
 
 import static ru.mail.dimaushenko.constants.ErrorConstants.ERROR_DATA_IS_INCORRECT;
-import static ru.mail.dimaushenko.constants.ErrorConstants.MESSAGE_DATA_IS_INCORRECT;
 import static ru.mail.dimaushenko.constants.ErrorConstants.MESSAGE_USER_IS_NOT_FOUND;
-import static ru.mail.dimaushenko.constants.Pages.VIEW_ALL_USERS;
 import static ru.mail.dimaushenko.constants.PropertyConstants.FORM_PARAMETER_ID;
-import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_MESSAGE;
 import static ru.mail.dimaushenko.constants.Pages.PAGE_REMOVE_USER;
-
+import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_NAME_MESSAGE;
+import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_PROPERTY_USER_NOT_REMOVED;
+import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_PROPERTY_USER_REMOVED;
 
 public class RemoveUserServlet extends ManagerServlet {
 
     private final PropertyUtil propertyUtil = PropertyUtilConstantsImpl.getInstance();
     private final Logger logger = LogManager.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService = UserServiceImpl.getInstance();
-
-    private final String MESSAGE_USER_IS_REMOVED = "<p>User was removed</p>";
-    private final String MESSAGE_FAIL = "<p>FAIL</p>";
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -46,21 +42,21 @@ public class RemoveUserServlet extends ManagerServlet {
             if (isUserFound) {
                 boolean isUserRemoved = userService.removeUser(id);
                 if (isUserRemoved) {
-                    message = MESSAGE_USER_IS_REMOVED;
+                    message = ATTRIBUTE_PROPERTY_USER_REMOVED;
                 } else {
-                    message = MESSAGE_FAIL;
+                    message = ATTRIBUTE_PROPERTY_USER_NOT_REMOVED;
                 }
             } else {
                 logger.error(MESSAGE_USER_IS_NOT_FOUND);
-                message = MESSAGE_USER_IS_NOT_FOUND;
+                message = ATTRIBUTE_PROPERTY_USER_NOT_REMOVED;
             }
 
         } catch (NumberFormatException nfe) {
             logger.error(ERROR_DATA_IS_INCORRECT);
-            message = MESSAGE_DATA_IS_INCORRECT;
+            message = ATTRIBUTE_PROPERTY_USER_NOT_REMOVED;
         }
 
-        req.setAttribute(ATTRIBUTE_MESSAGE, message);
+        req.setAttribute(ATTRIBUTE_NAME_MESSAGE, message);
         forward(PAGE_REMOVE_USER, req, resp);
 
     }

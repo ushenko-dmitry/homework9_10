@@ -20,16 +20,15 @@ import static ru.mail.dimaushenko.constants.PropertyConstants.FORM_PARAMETER_AGE
 import static ru.mail.dimaushenko.constants.PropertyConstants.FORM_PARAMETER_IS_ACTIVE;
 import static ru.mail.dimaushenko.constants.PropertyConstants.FORM_PARAMETER_PASSWORD;
 import static ru.mail.dimaushenko.constants.PropertyConstants.FORM_PARAMETER_USERNAME;
-import static ru.mail.dimaushenko.constants.ErrorConstants.ERROR_VALIDATION_AGE;
-import static ru.mail.dimaushenko.constants.ErrorConstants.ERROR_VALIDATION_PASSWORD;
-import static ru.mail.dimaushenko.constants.ErrorConstants.ERROR_VALIDATION_USERNAME;
-import static ru.mail.dimaushenko.constants.ErrorConstants.MESSAGE_USER_CREATED;
-import static ru.mail.dimaushenko.constants.ErrorConstants.MESSAGE_USER_NOT_CREATED;
 import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_ERR_AGE;
 import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_ERR_PASSWORD;
 import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_ERR_USERNAME;
-import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_MESSAGE;
 import static ru.mail.dimaushenko.constants.Pages.PAGE_CREATE_USER;
+import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_NAME_MESSAGE;
+import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_PROPERTY_ERROR_VALIDATION_AGE;
+import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_PROPERTY_ERROR_VALIDATION_PASSWORD;
+import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_PROPERTY_ERROR_VALIDATION_USERNAME;
+import static ru.mail.dimaushenko.constants.Attributes.ATTRIBUTE_PROPERTY_USER_CREATED;
 
 public class CreateUserServlet extends ManagerServlet {
 
@@ -52,22 +51,22 @@ public class CreateUserServlet extends ManagerServlet {
 
         if (!validator.isStringLengthValid(username, 40)) {
             isValid = false;
-            req.setAttribute(ATTRIBUTE_ERR_USERNAME, ERROR_VALIDATION_USERNAME);
+            req.setAttribute(ATTRIBUTE_ERR_USERNAME, ATTRIBUTE_PROPERTY_ERROR_VALIDATION_USERNAME);
         }
 
         if (!validator.isStringContainsUsernameSymbols(username)) {
             isValid = false;
-            req.setAttribute(ATTRIBUTE_ERR_USERNAME, ERROR_VALIDATION_USERNAME);
+            req.setAttribute(ATTRIBUTE_ERR_USERNAME, ATTRIBUTE_PROPERTY_ERROR_VALIDATION_USERNAME);
         }
 
         if (!validator.isStringLengthValid(password, 40)) {
             isValid = false;
-            req.setAttribute(ATTRIBUTE_ERR_PASSWORD, ERROR_VALIDATION_PASSWORD);
+            req.setAttribute(ATTRIBUTE_ERR_PASSWORD, ATTRIBUTE_PROPERTY_ERROR_VALIDATION_PASSWORD);
         }
 
         if (!validator.isInteger(ageStr)) {
             isValid = false;
-            req.setAttribute(ATTRIBUTE_ERR_AGE, ERROR_VALIDATION_AGE);
+            req.setAttribute(ATTRIBUTE_ERR_AGE, ATTRIBUTE_PROPERTY_ERROR_VALIDATION_AGE);
         }
 
         if (isValid) {
@@ -82,12 +81,12 @@ public class CreateUserServlet extends ManagerServlet {
             addUserDTO.setAge(age);
 
             userService.addUser(addUserDTO);
-            message = MESSAGE_USER_CREATED;
+            message = ATTRIBUTE_PROPERTY_USER_CREATED;
         } else {
-            message = MESSAGE_USER_NOT_CREATED;
+            message = ATTRIBUTE_PROPERTY_USER_CREATED;
         }
 
-        req.setAttribute(ATTRIBUTE_MESSAGE, message);
+        req.setAttribute(ATTRIBUTE_NAME_MESSAGE, message);
 
         forward(PAGE_CREATE_USER, req, resp);
     }
@@ -97,11 +96,6 @@ public class CreateUserServlet extends ManagerServlet {
 
         forward(PAGE_CREATE_USER, req, resp);
 
-    }
-    
-    private HttpServletRequest setStandartAttributes(HttpServletRequest req){
-        
-        return req;
     }
 
 }
